@@ -20,15 +20,15 @@ export function Timer() {
   return (
     <section className="flex flex-col flex-grow">
       <section className="h-1/2 flex flex-col rotate-180 gap-4">
-        {/* <PrizeCounter player={1} /> */}
-        {/* <TimeCounter player={1} game={game.current} /> */}
-        {/* <VStarButton /> */}
+        <PrizeCounter player={1} />
+        <TimeCounter player={1} game={game.current} />
+        <VStarButton />
       </section>
       <Controls game={game.current} />
       <section className="h-1/2 flex flex-col gap-4">
-        {/* <PrizeCounter player={2} /> */}
-        {/* <TimeCounter player={2} game={game.current} /> */}
-        {/* <VStarButton /> */}
+        <PrizeCounter player={2} />
+        <TimeCounter player={2} game={game.current} />
+        <VStarButton />
       </section>
     </section>
   );

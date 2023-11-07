@@ -7,19 +7,19 @@ import { Game } from "@/store/Game";
 import { observer } from "mobx-react";
 
 export function Timer({ totalTime = "50min" }: { totalTime?: string }) {
-  const game = useRef(new Game(totalTime));
+  const { current: game } = useRef(new Game(totalTime));
 
   return (
     <section className="flex flex-col flex-grow">
       <section className="h-1/2 flex flex-col rotate-180 gap-4">
         <PrizeCounter player={1} />
-        <TimeCounter player={1} game={game.current} />
+        <TimeCounter player={1} game={game} />
         <VStarButton />
       </section>
-      <Controls game={game.current} />
+      <Controls game={game} />
       <section className="h-1/2 flex flex-col gap-4">
         <PrizeCounter player={2} />
-        <TimeCounter player={2} game={game.current} />
+        <TimeCounter player={2} game={game} />
         <VStarButton />
       </section>
     </section>
@@ -52,6 +52,7 @@ const Controls = observer(({ game }: { game: Game }) => (
 
 const TimeCounter = observer(
   ({ player, game }: { player: number; game: Game }) => {
+    if (!game) return undefined;
     const isRunning = player === game.currentPlayer;
     const [remaining, setRemaining] = useState(game.totalTime / 2);
 

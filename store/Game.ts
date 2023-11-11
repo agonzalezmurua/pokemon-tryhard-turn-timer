@@ -4,25 +4,79 @@ import ms from "ms";
 
 enableStaticRendering(typeof window === "undefined");
 
+export type Player = 1 | 2;
+
 export class Game {
-  public currentPlayer: 1 | 2 | undefined = undefined;
+  public currentPlayer: Player | undefined = undefined;
   public totalTime: number = ms("50min");
-  readonly delay: number = ms("1s");
+  readonly tickDuration: number = ms("1s");
+  private turnHistory: [player: Player, Turn][] = [];
 
   constructor() {
     makeAutoObservable(this);
   }
 
-  setTurn = (turn: 1 | 2) => {
-    this.currentPlayer = turn;
+  get isFirstGameTurn() {
+    return this.turnHistory.length === 0;
+  }
+
+  start = (player: Player) => {
+    if (this.currentPlayer) throw new Error("Game already started");
+
+    this.advanceTurn(player);
   };
 
-  nextTurn = () => {
-    if (this.currentPlayer === 1) this.currentPlayer = 2;
-    else this.currentPlayer = 1;
+  advanceTurn = (nextPlayer: Player = this.currentPlayer === 1 ? 2 : 1) => {
+    const latestTurn = this.getLatestTurn();
+
+    if (latestTurn) {
+      latestTurn.end();
+    }
+
+    this.turnHistory.push([nextPlayer, new Turn()]);
+    this.currentPlayer = nextPlayer;
+    console.log(this.turnHistory);
+  };
+
+  getLatestTurn = (): Turn | null => {
+    const lastEntry = this.turnHistory[this.turnHistory.length - 1];
+    if (!lastEntry) return null;
+
+    return lastEntry[1];
+  };
+
+  getLastEndedTurnOf = (player: Player): Turn | null => {
+    const lastEntry = this.turnHistory.findLast(
+      ([p, t]) => p === player && t.endedAt !== undefined
+    );
+
+    if (!lastEntry) return null;
+
+    const [, turn] = lastEntry;
+
+    return turn;
   };
 
   pause = () => {
     this.currentPlayer = undefined;
+  };
+}
+
+class Turn {
+  startedAt: number;
+  endedAt?: number;
+
+  get duration() {
+    if (!this.endedAt) return null;
+
+    return this.endedAt - this.startedAt;
+  }
+
+  constructor() {
+    this.startedAt = Date.now();
+  }
+
+  end = () => {
+    this.endedAt = Date.now();
   };
 }

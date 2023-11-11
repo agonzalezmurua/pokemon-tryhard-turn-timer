@@ -1,0 +1,9 @@
+
+.v {
+  --border-color: theme('colors.yellow.500');
+  -webkit-text-stroke: 1px var(--border-color);
+}
+
+.star {
+  @apply bg-gradient-to-br from-yellow-300 via-yellow-600 to-yellow-800 bg-clip-text text-transparent;
+}

@@ -7,24 +7,26 @@ enableStaticRendering(typeof window === "undefined");
 export type Player = 1 | 2;
 
 export class Game {
+  readonly tickDuration: number = ms("1s");
   public currentPlayer: Player | undefined = undefined;
   public totalTime: number = ms("50min");
-  readonly tickDuration: number = ms("1s");
   private turnHistory: [player: Player, Turn][] = [];
 
   constructor() {
     makeAutoObservable(this);
   }
 
+  get hasStarted() {
+    return this.turnHistory.length !== 0;
+  }
+
+  get isPaused() {
+    return this.turnHistory.length !== 0 && this.currentPlayer === undefined;
+  }
+
   get isFirstGameTurn() {
     return this.turnHistory.length === 0;
   }
-
-  start = (player: Player) => {
-    if (this.currentPlayer) throw new Error("Game already started");
-
-    this.advanceTurn(player);
-  };
 
   advanceTurn = (nextPlayer: Player = this.currentPlayer === 1 ? 2 : 1) => {
     const latestTurn = this.getLatestTurn();
@@ -35,7 +37,6 @@ export class Game {
 
     this.turnHistory.push([nextPlayer, new Turn()]);
     this.currentPlayer = nextPlayer;
-    console.log(this.turnHistory);
   };
 
   getLatestTurn = (): Turn | null => {
@@ -55,6 +56,12 @@ export class Game {
     const [, turn] = lastEntry;
 
     return turn;
+  };
+
+  start = (player: Player) => {
+    if (this.currentPlayer) throw new Error("Game already started");
+
+    this.advanceTurn(player);
   };
 
   pause = () => {

@@ -6,9 +6,9 @@ import styles from "./Controls.module.css";
 
 export const Controls = observer(({ game }: { game: Game }) => {
   return (
-    <section className="p-4 text-4xl flex flex-col align-middle justify-center h-1/4">
+    <section className="text-4xl flex flex-col align-middle justify-center h-1/4 p-4">
       {game.currentPlayer === undefined ? (
-        <section className="text-4xl space-y-4 flex flex-col gap-2 p-2">
+        <section className="text-4xl space-y-4 flex flex-col gap-2">
           <button
             className={classNames(styles.startBtn, "rotate-180")}
             onClick={() => game.start(1)}

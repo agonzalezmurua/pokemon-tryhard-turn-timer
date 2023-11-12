@@ -6,7 +6,7 @@ import styles from "./Controls.module.css";
 
 export const Controls = observer(({ game }: { game: Game }) => {
   return (
-    <section className="text-4xl flex flex-col align-middle justify-center h-1/4 p-4">
+    <section className="text-4xl flex flex-col align-middle justify-center h-1/4 m-6">
       {game.currentPlayer === undefined ? (
         <section className="text-4xl space-y-4 flex flex-col gap-2">
           <button
